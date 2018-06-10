@@ -194,7 +194,6 @@
                                 </database>
                                 <generate>
                                     <instanceFields>true</instanceFields>
-                                    <pojos>true</pojos>
                                 </generate>
                                 <target>
                                     <packageName>io.github.ajurasz.quiz.db</packageName>
