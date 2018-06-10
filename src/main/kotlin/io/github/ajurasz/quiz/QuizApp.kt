@@ -1,22 +1,25 @@
 package io.github.ajurasz.quiz
 
-import spark.Filter
-import spark.Request
-import spark.Response
-import spark.Spark.*
+import com.google.inject.Guice
+import com.google.inject.Inject
+import io.github.ajurasz.quiz.user.UserRepository
+import spark.Spark.get
+import spark.Spark.port
 
 
-fun main(args: Array<String>) {
-    port(8080)
+class QuizApp @Inject constructor(private val userRepository: UserRepository) {
 
-    before("/api", SecurityFilter())
-
-    get("/") {_, _ -> "Quiz App"}
-}
-
-class SecurityFilter: Filter {
-    override fun handle(request: Request, response: Response) {
-        TODO("not implemented")
+    fun run(port: Int) {
+        port(port)
+        get("/") {_, _ -> "Quiz App"}
+        get("/login") {_, _ ->
+            userRepository.findOne("admin", "admin")
+        }
     }
 }
 
+fun main(args: Array<String>) {
+    Guice.createInjector(QuizModule())
+            .getInstance(QuizApp::class.java)
+            .run(8080)
+}
