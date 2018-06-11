@@ -2,18 +2,23 @@ package io.github.ajurasz.quiz
 
 import com.google.inject.Guice
 import com.google.inject.Inject
+import io.github.ajurasz.quiz.security.SecurityFilter
 import io.github.ajurasz.quiz.user.UserRepository
-import spark.Spark.get
-import spark.Spark.port
+import spark.Spark.*
 
 
 class QuizApp @Inject constructor(private val userRepository: UserRepository) {
 
     fun run(port: Int) {
         port(port)
+
+        before("/api", SecurityFilter(userRepository))
+
         get("/") {_, _ -> "Quiz App"}
+        get("/api") {_, _ -> "API"}
+        get("/api/secure") {_, _ -> "API"}
         get("/login") {_, _ ->
-            userRepository.findOne("admin", "admin")
+            userRepository.exist("admin", "admin")
         }
     }
 }
