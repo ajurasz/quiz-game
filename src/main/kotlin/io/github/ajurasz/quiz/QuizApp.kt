@@ -12,10 +12,9 @@ class QuizApp @Inject constructor(private val userRepository: UserRepository) {
     fun run(port: Int) {
         port(port)
 
-        before("/api", SecurityFilter(userRepository))
+        before("/api/*", SecurityFilter())
 
         get("/") {_, _ -> "Quiz App"}
-        get("/api") {_, _ -> "API"}
         get("/api/secure") {_, _ -> "API"}
         get("/login") {_, _ ->
             userRepository.exist("admin", "admin")
