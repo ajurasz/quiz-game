@@ -15,15 +15,16 @@ class SecurityFilter: Filter {
             halt(HttpStatus.UNAUTHORIZED_401)
         }
 
-        if (!TokenUtils.verify(token)) {
+        try {
+            val claims = TokenUtils.validateAndGetClaims(token)
+            val username = claims[TokenUtils.Claims.USERNAME]
+
+            when (username) {
+                null -> halt(HttpStatus.UNAUTHORIZED_401)
+                else ->  request.attribute(USER, username)
+            }
+        } catch (e: TokenUtils.CredentialsException) {
             halt(HttpStatus.UNAUTHORIZED_401)
-        }
-
-        val username = TokenUtils.username(token)
-
-        when (username) {
-            null -> halt(HttpStatus.UNAUTHORIZED_401)
-            else ->  request.attribute(USER, username)
         }
     }
 

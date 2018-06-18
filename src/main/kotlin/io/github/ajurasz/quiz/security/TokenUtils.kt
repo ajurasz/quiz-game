@@ -3,7 +3,15 @@ package io.github.ajurasz.quiz.security
 import io.github.ajurasz.quiz.user.User
 
 object TokenUtils {
-    fun verify(token: String): Boolean = true
+
+    enum class Claims {
+        USERNAME
+    }
+
+    class CredentialsException : RuntimeException()
+
+    @Throws(CredentialsException::class)
+    fun validateAndGetClaims(token: String): Map<Claims, String> = emptyMap()
+
     fun generate(user: User): String = ""
-    fun username(token: String): String? = ""
 }
