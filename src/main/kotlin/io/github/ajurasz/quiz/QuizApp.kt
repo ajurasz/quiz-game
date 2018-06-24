@@ -16,8 +16,13 @@ class QuizApp @Inject constructor(private val userRepository: UserRepository) {
 
         get("/") {_, _ -> "Quiz App"}
         get("/api/secure") {_, _ -> "API"}
+        get("/register") {_, _ ->
+            val user = userRepository.save("admin1", "admin1")
+            user
+        }
         get("/login") {_, _ ->
-            userRepository.exist("admin", "admin")
+            val user = userRepository.findOne("admin1")
+            user.password.verifyHash("admin1")
         }
     }
 }
