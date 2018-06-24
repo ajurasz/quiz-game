@@ -7,12 +7,13 @@ import io.github.ajurasz.quiz.user.UserRepository
 import spark.Spark.*
 
 
-class QuizApp @Inject constructor(private val userRepository: UserRepository) {
+class QuizApp @Inject constructor(private val securityFilter: SecurityFilter,
+                                  private val userRepository: UserRepository) {
 
     fun run(port: Int) {
         port(port)
 
-        before("/api/*", SecurityFilter())
+        before("/api/*",securityFilter)
 
         get("/") {_, _ -> "Quiz App"}
         get("/api/secure") {_, _ -> "API"}

@@ -6,7 +6,7 @@ import spark.Request
 import spark.Response
 import spark.Spark.halt
 
-class SecurityFilter: Filter {
+class SecurityFilter(private val tokenProvider: TokenProvider): Filter {
 
     override fun handle(request: Request, response: Response) {
         val token = request.headers(TOKEN_HEADER) ?: ""
@@ -16,14 +16,9 @@ class SecurityFilter: Filter {
         }
 
         try {
-            val claims = TokenUtils.validateAndGetClaims(token)
-            val username = claims[TokenUtils.Claims.USERNAME]
-
-            when (username) {
-                null -> halt(HttpStatus.UNAUTHORIZED_401)
-                else ->  request.attribute(USER, username)
-            }
-        } catch (e: TokenUtils.CredentialsException) {
+            val username = tokenProvider.validateAndGetSubject(token)
+            request.attribute(USER, username)
+        } catch (e: TokenProvider.CredentialsException) {
             halt(HttpStatus.UNAUTHORIZED_401)
         }
     }

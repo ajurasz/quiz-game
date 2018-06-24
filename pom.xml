@@ -22,6 +22,7 @@
         <guice.version>4.2.0</guice.version>
         <HikariCP.version>3.2.0</HikariCP.version>
         <jbcrypt.version>0.4</jbcrypt.version>
+        <jjwt.version>0.9.0</jjwt.version>
     </properties>
 
     <dependencies>
@@ -53,6 +54,11 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
         </dependency>
 
         <!-- Database access -->
